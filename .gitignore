@@ -1,0 +1,31 @@
+# Local .terraform directories (contains provider binaries)
+**/.terraform/*
+
+# .tfstate files (contains your infrastructure passwords/secrets)
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+# Ignore any .tfvars that might contain secrets 
+# (You can allow terraform.tfvars if it only has public IDs)
+*.tfvars
+*.tfvars.json
+
+# Ignore local override files
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# Ignore the diagrams we generated
+*.png
+*.dot
+
+# Mac OS files
+.DS_Store

@@ -1,0 +1,21 @@
+variable "project_id" {
+  description = "The GCP Project ID"
+  type        = string
+}
+
+variable "region" {
+  description = "GCP Region"
+  type        = string
+  default     = "us-central1"
+}
+
+variable "zone" {
+  description = "GCP Zone"
+  type        = string
+  default     = "us-central1-a"
+}
+
+variable "admin_email" {
+  description = "The email address of the user who needs IAP access"
+  type        = string
+}
