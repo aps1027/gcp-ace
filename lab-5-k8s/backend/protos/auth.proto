@@ -1,0 +1,546 @@
+syntax = "proto3";
+
+package auth;
+
+import "google/protobuf/timestamp.proto";
+
+service AuthHealthService {
+  rpc check (AuthHealthCheckRequest) returns (AuthHealthCheckResponse);
+}
+
+message AuthHealthCheckRequest {
+}
+
+message AuthHealthCheckResponse {
+  bool status = 1;
+}
+
+// user
+enum SystemUserType {
+  CUSTOMER = 0;
+  STAFF = 1;
+}
+
+enum TokenType {
+  RESET = 0;
+  VERIFY = 1;
+}
+
+message User {
+  int32 id = 1;
+  SystemUserType type = 2;
+  optional Staff staff = 3;
+}
+
+
+message UserResponse {
+  User data = 1;
+}
+
+message UserListRequest {
+  optional string sort = 1; // ["field_name", "ASC/DESC"]
+  optional string range = 2;  // [start, end]
+  optional string filter = 3; // {"field": "value", "field2": "value2"}
+}
+
+message UserGetOneRequest {
+  int32 id = 1;
+}
+
+message UserListResponse {
+  repeated User data = 1;
+  int32 total_count = 2;
+}
+
+
+service UserService {
+  rpc getOne (UserGetOneRequest) returns (UserResponse);
+  rpc getList (UserListRequest) returns (UserListResponse);
+}
+
+message PermissionType {
+  int32 id = 1;
+  string name = 2;
+  optional string description = 3;
+}
+
+message PermissionResource {
+  int32 id = 1;
+  string name = 2;
+  optional string description = 3;
+}
+
+message Permission {
+  int32 id = 1;
+  optional PermissionType type = 2;
+  optional PermissionResource resource = 3;
+  string name = 4;
+  optional string description = 5;
+}
+
+message StaffPermission {
+  int32 id = 1;
+  optional Permission permission = 2;
+  int32 created_by_id = 3;
+  optional google.protobuf.Timestamp created_at = 4;
+  repeated int32 allow_ids = 5;
+  bool is_allowed_all = 6;
+}
+
+// staff
+message Staff {
+  int32 id = 1;
+  int32 user_id = 2;
+  string first_name = 3;
+  string last_name = 4;
+  string email = 5;
+  bool is_root = 6;
+  int32 department_id = 7;
+  int32 position_id = 8;
+  optional string profile_path = 9;
+  optional string cover_photo_path = 10;
+  optional string bio = 11;
+  optional google.protobuf.Timestamp created_at = 12;
+  optional google.protobuf.Timestamp updated_at = 13;
+  optional google.protobuf.Timestamp deleted_at = 14;
+  optional int32 created_by_id = 15;
+  optional int32 updated_by_id = 16;
+  optional int32 deleted_by_id = 17;
+  optional StaffPosition position = 18;
+  optional StaffDepartment department = 19;
+}
+
+message StaffCreateRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string email = 3;
+  string password = 4;
+  int32 department_id = 5;
+  int32 position_id = 6;
+  optional string profile_path = 7;
+  optional string cover_photo_path = 8;
+  optional string bio = 9;
+  int32 created_by_id = 10;
+}
+
+message StaffResponse {
+  Staff data = 1;
+}
+
+message StaffUpdateRequest {
+  string first_name = 1;
+  string last_name = 2;
+  string email = 3;
+  optional string password = 4;
+  int32 department_id = 5;
+  int32 position_id = 6;
+  optional string profile_path = 7;
+  optional string cover_photo_path = 8;
+  optional string bio = 9;
+  int32 updated_by_id = 10;
+  int32 id = 11;
+}
+
+message StaffDeleteRequest {
+  int32 id = 1;
+  optional int32 deleted_by_id = 2;
+}
+
+message StaffListRequest {
+  optional string sort = 1; // ["field_name", "ASC/DESC"]
+  optional string range = 2;  // [start, end]
+  optional string filter = 3; // {"field": "value", "field2": "value2"}
+  optional int32 current_user_id = 4;
+}
+
+message StaffGetOneRequest {
+  int32 id = 1;
+}
+
+message StaffListResponse {
+  repeated Staff data = 1;
+  int32 total_count = 2;
+}
+
+service StaffService {
+  rpc create (StaffCreateRequest) returns (StaffResponse);
+  rpc update (StaffUpdateRequest) returns (StaffResponse);
+  rpc delete (StaffDeleteRequest) returns (StaffResponse);
+  rpc getOne (StaffGetOneRequest) returns (StaffResponse);
+  rpc getList (StaffListRequest) returns (StaffListResponse);
+}
+
+// staff position
+message StaffPosition {
+  int32 id = 1;
+  string name = 2;
+  optional string description = 3;
+  optional google.protobuf.Timestamp created_at = 4;
+  optional google.protobuf.Timestamp updated_at = 5;
+  optional google.protobuf.Timestamp deleted_at = 6;
+  optional int32 created_by_id = 7;
+  optional int32 updated_by_id = 8;
+  optional int32 deleted_by_id = 9;
+}
+
+message StaffPositionCreateRequest {
+  string name = 1;
+  optional string description = 2;
+  int32 created_by_id = 3;
+}
+
+message StaffPositionResponse {
+  StaffPosition data = 1;
+}
+
+message StaffPositionUpdateRequest {
+  string name = 1;
+  optional string description = 2;
+  int32 updated_by_id = 3;
+  int32 id = 4;
+}
+
+message StaffPositionDeleteRequest {
+  int32 id = 1;
+  optional int32 deleted_by_id = 2;
+}
+
+message StaffPositionListRequest {
+  optional string sort = 1; // ["field_name", "ASC/DESC"]
+  optional string range = 2;  // [start, end]
+  optional string filter = 3; // {"field": "value", "field2": "value2"}
+  optional int32 current_user_id = 4;
+}
+
+message StaffPositionGetOneRequest {
+  int32 id = 1;
+}
+
+message StaffPositionListResponse {
+  repeated StaffPosition data = 1;
+  int32 total_count = 2;
+}
+
+service StaffPositionService {
+  rpc create (StaffPositionCreateRequest) returns (StaffPositionResponse);
+  rpc update (StaffPositionUpdateRequest) returns (StaffPositionResponse);
+  rpc delete (StaffPositionDeleteRequest) returns (StaffPositionResponse);
+  rpc getOne (StaffPositionGetOneRequest) returns (StaffPositionResponse);
+  rpc getList (StaffPositionListRequest) returns (StaffPositionListResponse);
+}
+
+// staff department
+message StaffDepartment {
+  int32 id = 1;
+  string name = 2;
+  optional string description = 3;
+  optional google.protobuf.Timestamp created_at = 4;
+  optional google.protobuf.Timestamp updated_at = 5;
+  optional google.protobuf.Timestamp deleted_at = 6;
+  optional int32 created_by_id = 7;
+  optional int32 updated_by_id = 8;
+  optional int32 deleted_by_id = 9;
+}
+
+message StaffDepartmentCreateRequest {
+  string name = 1;
+  optional string description = 2;
+  int32 created_by_id = 3;
+}
+
+message StaffDepartmentResponse {
+  StaffDepartment data = 1;
+}
+
+message StaffDepartmentUpdateRequest {
+  string name = 1;
+  optional string description = 2;
+  int32 updated_by_id = 3;
+  int32 id = 4;
+}
+
+message StaffDepartmentDeleteRequest {
+  int32 id = 1;
+  optional int32 deleted_by_id = 2;
+}
+
+message StaffDepartmentListRequest {
+  optional string sort = 1; // ["field_name", "ASC/DESC"]
+  optional string range = 2;  // [start, end]
+  optional string filter = 3; // {"field": "value", "field2": "value2"}
+  optional int32  current_user_id = 4;
+}
+
+message StaffDepartmentGetOneRequest {
+  int32 id = 1;
+}
+
+message StaffDepartmentListResponse {
+  repeated StaffDepartment data = 1;
+  int32 total_count = 2;
+}
+
+service StaffDepartmentService {
+  rpc create (StaffDepartmentCreateRequest) returns (StaffDepartmentResponse);
+  rpc update (StaffDepartmentUpdateRequest) returns (StaffDepartmentResponse);
+  rpc delete (StaffDepartmentDeleteRequest) returns (StaffDepartmentResponse);
+  rpc getOne (StaffDepartmentGetOneRequest) returns (StaffDepartmentResponse);
+  rpc getList (StaffDepartmentListRequest) returns (StaffDepartmentListResponse);
+}
+
+// staff auth
+message StaffLoginRequest {
+  string email = 1;
+  string password = 2;
+  bool remember_me = 3;
+}
+
+message StaffLoginResponse {
+  string access_token = 1;
+  repeated StaffPermission permissions = 2;
+  repeated GroupPermission groupPermissions = 3;
+  bool is_root = 4;
+  Staff staff = 5;
+}
+
+message StaffGetMeResponse {
+  repeated StaffPermission permissions = 1;
+  repeated GroupPermission groupPermissions = 2;
+  bool is_root = 3;
+  Staff staff = 4;
+}
+
+message StaffGetMeRequest {
+}
+
+message StaffValidateRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message StaffValidateResponse {
+  Staff data = 1;
+}
+
+service StaffAuthService {
+  rpc login (StaffLoginRequest) returns (StaffLoginResponse);
+  rpc validate (StaffValidateRequest) returns (StaffValidateResponse);
+  rpc getMe (StaffGetMeRequest) returns (StaffGetMeResponse);
+}
+
+// permission
+message PermissionResponse {
+  Permission data = 1;
+}
+
+message PermissionListRequest {
+  optional string sort = 1; // ["field_name", "ASC/DESC"]
+  optional string range = 2;  // [start, end]
+  optional string filter = 3; // {"field": "value", "field2": "value2"}
+}
+
+message PermissionGetOneRequest {
+  int32 id = 1;
+}
+
+message PermissionListResponse {
+  repeated Permission data = 1;
+  int32 total_count = 2;
+}
+
+service PermissionService {
+  rpc getOne (PermissionGetOneRequest) returns (PermissionResponse);
+  rpc getList (PermissionListRequest) returns (PermissionListResponse);
+}
+
+// staff permission
+message StaffPermissionAssignRequest {
+  int32 staff_id = 1;
+  int32 permission_id = 2;
+  bool is_allowed_all = 3;
+  repeated int32 allow_ids = 4;
+  int32 created_by_id = 5;
+}
+
+message StaffPermissionResponse {
+  StaffPermission data = 1;
+}
+
+message StaffPermissionListByStaffRequest {
+  int32 staff_id = 1;
+}
+
+message StaffPermissionListResponse {
+  repeated StaffPermission data = 1;
+  int32 total_count = 2;
+}
+
+message StaffPermissionListRequest {
+  optional string sort = 1; // ["field_name", "ASC/DESC"]
+  optional string range = 2;  // [start, end]
+  optional string filter = 3; // {"field": "value", "field2": "value2"}
+}
+
+message StaffPermissionDeleteRequest {
+  int32 id = 1;
+}
+
+service StaffPermissionService {
+  rpc assign (StaffPermissionAssignRequest) returns (StaffPermissionResponse);
+  rpc getListByStaff (StaffPermissionListByStaffRequest) returns (StaffPermissionListResponse);
+  rpc getList (StaffPermissionListRequest) returns (StaffPermissionListResponse);
+  rpc delete (StaffPermissionDeleteRequest) returns (StaffPermissionResponse);
+}
+
+// group
+message Group {
+  int32 id = 1;
+  string name = 2;
+  optional string description = 3;
+  optional google.protobuf.Timestamp created_at = 4;
+  optional google.protobuf.Timestamp updated_at = 5;
+  optional google.protobuf.Timestamp deleted_at = 6;
+  optional int32 created_by_id = 7;
+  optional int32 updated_by_id = 8;
+  optional int32 deleted_by_id = 9;
+}
+
+message GroupCreateRequest {
+  string name = 1;
+  optional string description = 2;
+  repeated int32 staff_ids = 3;
+  int32 created_by_id = 4;
+}
+
+message GroupResponse {
+  Group data = 1;
+}
+
+message GroupUpdateRequest {
+  string name = 1;
+  optional string description = 2;
+  int32 updated_by_id = 3;
+  int32 id = 4;
+}
+
+message GroupDeleteRequest {
+  int32 id = 1;
+  optional int32 deleted_by_id = 2;
+}
+
+message GroupListRequest {
+  optional string sort = 1; // ["field_name", "ASC/DESC"]
+  optional string range = 2;  // [start, end]
+  optional string filter = 3; // {"field": "value", "field2": "value2"}
+  optional int32  current_user_id = 4;
+}
+
+message GroupGetOneRequest {
+  int32 id = 1;
+}
+
+message GroupListResponse {
+  repeated Group data = 1;
+  int32 total_count = 2;
+}
+
+service GroupService {
+  rpc create (GroupCreateRequest) returns (GroupResponse);
+  rpc update (GroupUpdateRequest) returns (GroupResponse);
+  rpc delete (GroupDeleteRequest) returns (GroupResponse);
+  rpc getOne (GroupGetOneRequest) returns (GroupResponse);
+  rpc getList (GroupListRequest) returns (GroupListResponse);
+}
+
+// group permission
+message GroupPermission {
+  int32 id = 1;
+  optional Permission permission = 2;
+  int32 created_by_id = 3;
+  optional google.protobuf.Timestamp created_at = 4;
+  repeated int32 allow_ids = 5;
+  bool is_allowed_all = 6;
+}
+
+message GroupPermissionAssignRequest {
+  int32 group_id = 1;
+  int32 permission_id = 2;
+  bool is_allowed_all = 3;
+  repeated int32 allow_ids = 4;
+  int32 created_by_id = 5;
+}
+
+message GroupPermissionResponse {
+  GroupPermission data = 1;
+}
+
+message GroupPermissionListByGroupRequest {
+  int32 group_id = 1;
+}
+
+message GroupPermissionListByStaffRequest {
+  int32 staff_id = 1;
+}
+
+message GroupPermissionListResponse {
+  repeated GroupPermission data = 1;
+  int32 total_count = 2;
+}
+
+message GroupPermissionListRequest {
+  optional string sort = 1; // ["field_name", "ASC/DESC"]
+  optional string range = 2;  // [start, end]
+  optional string filter = 3; // {"field": "value", "field2": "value2"}
+}
+
+message GroupPermissionDeleteRequest {
+  int32 id = 1;
+}
+
+service GroupPermissionService {
+  rpc assign (GroupPermissionAssignRequest) returns (GroupPermissionResponse);
+  rpc getListByGroup (GroupPermissionListByGroupRequest) returns (GroupPermissionListResponse);
+  rpc getListByStaff (GroupPermissionListByStaffRequest) returns (GroupPermissionListResponse);
+  rpc getList (GroupPermissionListRequest) returns (GroupPermissionListResponse);
+  rpc delete (GroupPermissionDeleteRequest) returns (GroupPermissionResponse);
+}
+
+// staff group
+message StaffGroup {
+  int32 id = 1;
+  optional Group group = 2;
+  optional Staff staff = 3;
+  int32 created_by_id = 4;
+  optional google.protobuf.Timestamp created_at = 5;
+}
+
+message StaffGroupListResponse {
+  repeated StaffGroup data = 1;
+  int32 total_count = 2;
+}
+
+message StaffGroupAssignRequest {
+  int32 staff_id = 1;
+  int32 group_id = 2;
+  int32 created_by_id = 3;
+}
+
+message StaffGroupResponse {
+  StaffGroup data = 1;
+}
+
+message StaffGroupListRequest {
+  optional string sort = 1; // ["field_name", "ASC/DESC"]
+  optional string range = 2;  // [start, end]
+  optional string filter = 3; // {"field": "value", "field2": "value2"}
+}
+
+message StaffGroupDeleteRequest {
+  int32 id = 1;
+}
+
+service StaffGroupService {
+  rpc assign (StaffGroupAssignRequest) returns (StaffGroupResponse);
+  rpc getList (StaffGroupListRequest) returns (StaffGroupListResponse);
+  rpc delete (StaffGroupDeleteRequest) returns (StaffGroupResponse);
+}
