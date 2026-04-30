@@ -44,3 +44,13 @@ spec:
             # Optional: frontend URL or CORS
             - name: STAFF_FRONTEND_URL
               value: "http://localhost:5174"
+
+            
+            # =========================
+            # SECURITY
+            # =========================
+            - name: STAFF_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: STAFF_JWT_SECRET
