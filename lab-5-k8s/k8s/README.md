@@ -17,7 +17,9 @@ Components:
 - `services/auth/service.yaml` exposes the `auth` service internally on port `50051`.
 - `services/api/deployment.yaml` deploys the `api` microservice and configures it to call `auth`.
 - `services/api/service.yaml` exposes the `api` service internally on port `3000`.
+- `services/api/hpa.yaml` defines an HPA for the `api` deployment.
 - `services/api/ingress.yaml` exposes the `api` service externally through an NGINX ingress at host `api.local`.
+- `services/auth/hpa.yaml` defines an HPA for the `auth` deployment.
 - `tools/adminer/` deploys Adminer for database inspection on port `8080`.
 - `up.sh` installs the ingress controller and applies all manifests.
 - `down.sh` deletes the `k8s-dev` namespace.
@@ -26,8 +28,53 @@ Components:
 
 1. `up.sh` installs the `ingress-nginx` controller.
 2. Creates the namespace and configuration resources.
-3. Deploys MySQL, then `auth`, `api`, and Adminer.
+3. Deploys MySQL, then `auth`, `api`, and Adminer. The `services/*` directories also include HPA manifests for `api` and `auth`.
 4. `api` is reachable via the ingress at `http://api.local`.
+
+## Enable Kubernetes + Metrics Support
+
+Docker Desktop already includes Kubernetes, but metrics-server is often missing or broken by default.
+
+### Install metrics-server
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+
+### Fix for Docker Desktop (IMPORTANT)
+Edit metrics-server:
+```bash
+KUBE_EDITOR="nano" kubectl edit deployment metrics-server -n kube-system
+```
+Add this to container args:
+```yaml
+args:
+  - --kubelet-insecure-tls
+```
+
+Then restart:
+```bash
+kubectl rollout restart deployment metrics-server -n kube-system
+```
+
+### Verify it works
+```bash
+kubectl top nodes
+```
+
+### Test HPA with CPU load
+Apply load inside a target pod and watch the autoscaler react:
+```bash
+kubectl exec -it $(kubectl get pods -n k8s-dev -l app=api -o jsonpath='{.items[0].metadata.name}') -n k8s-dev -- sh
+apk add --no-cache stress-ng
+stress-ng --cpu 2 --cpu-load 90 --timeout 300s
+```
+
+Then monitor HPA status:
+```bash
+kubectl get hpa -n k8s-dev
+kubectl describe hpa api-hpa -n k8s-dev
+kubectl describe hpa auth-hpa -n k8s-dev
+```
 
 ## Runtime Relationships
 
@@ -64,9 +111,11 @@ flowchart TB
       api_svc["Service: api"]
       api_dep["Deployment: api"]
       api_pod["Pod: api-xxxxxxx"]
+      api_hpa["HPA: api-hpa"]
       auth_svc["Service: auth"]
       auth_dep["Deployment: auth"]
       auth_pod["Pod: auth-xxxxxxx"]
+      auth_hpa["HPA: auth-hpa"]
       mysql_svc["Service: mysql (headless)"]
       mysql_db["StatefulSet: mysql"]
       mysql_pod["Pod: mysql-0"]
@@ -82,9 +131,11 @@ flowchart TB
   api_ingress --> api_svc
   api_svc --> api_dep
   api_dep --> api_pod
+  api_hpa --> api_dep
   api_pod -->|gRPC auth:50051| auth_svc
   auth_svc --> auth_dep
   auth_dep --> auth_pod
+  auth_hpa --> auth_dep
   auth_pod -->|MySQL connection| mysql_svc
   mysql_svc --> mysql_db
   mysql_db --> mysql_pod

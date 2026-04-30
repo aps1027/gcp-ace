@@ -8,4 +8,12 @@ export const AUTH_GRPC_OPTION = {
     keepCase: true,
     includeDirs: [__dirname, '../../../protos'],
   },
+  channelOptions: {
+    'grpc.keepalive_time_ms': 10000,
+    'grpc.keepalive_timeout_ms': 5000,
+    'grpc.max_reconnect_backoff_ms': 1000,
+    'grpc.service_config': JSON.stringify({
+      loadBalancingConfig: [{ round_robin: {} }],
+    }),
+  },
 };

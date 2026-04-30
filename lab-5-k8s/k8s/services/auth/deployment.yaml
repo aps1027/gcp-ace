@@ -23,6 +23,15 @@ spec:
             - sh
             - -c
             - npx prisma migrate deploy --schema=databases/auth/schema.prisma && node dist/apps/auth/main
+
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+
           env:
             # =========================
             # DB CONFIG (from config + secret)

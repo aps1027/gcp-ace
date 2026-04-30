@@ -15,7 +15,7 @@ import * as grpc from '@grpc/grpc-js';
         transport: Transport.GRPC,
         options: {
           ...AUTH_GRPC_OPTION,
-          url: process.env.AUTH_MS_URL,
+          url: `dns:///` + process.env.AUTH_MS_URL,
           credentials:
             process.env.NODE_ENV === 'production'
               ? grpc.credentials.createSsl()

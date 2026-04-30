@@ -13,6 +13,7 @@ message AuthHealthCheckRequest {
 
 message AuthHealthCheckResponse {
   bool status = 1;
+  string pod = 2;
 }
 
 // user

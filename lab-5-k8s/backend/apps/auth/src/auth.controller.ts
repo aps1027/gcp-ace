@@ -17,6 +17,9 @@ export class AuthController {
 
   @GrpcMethod(AUTH_HEALTH_SERVICE_NAME, 'check')
   check(): AuthHealthCheckResponse {
-    return { status: true };
+    return {
+      status: true,
+      pod: process.env.HOSTNAME as any,
+    };
   }
 }
