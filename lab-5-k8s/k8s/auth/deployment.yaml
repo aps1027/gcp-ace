@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+  namespace: k8s-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth
+  template:
+    metadata:
+      labels:
+        app: auth
+    spec:
+      containers:
+        - name: auth
+          image: backend-auth:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 50051
+          env:
+            # =========================
+            # DB CONFIG (from config + secret)
+            # =========================
+            - name: MYSQL_USER
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MYSQL_USER
+
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: MYSQL_PASSWORD
+
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: MYSQL_HOST
+
+            - name: MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: MYSQL_PORT
+
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: MYSQL_DATABASE
+
+            # =========================
+            # SERVICE COMMUNICATION
+            # =========================
+            - name: AUTH_MS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: AUTH_MS_URL
+
+            # =========================
+            # SECURITY
+            # =========================
+            - name: STAFF_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: secret
+                  key: STAFF_JWT_SECRET
+
+            # =========================
+            # OPTIONAL: build DSN in app or here
+            # =========================
+            # - name: AUTH_MS_DATABASE_URL
+            #   value: "mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@$(MYSQL_HOST):$(MYSQL_PORT)/$(MYSQL_DATABASE)"
+
+            - name: AUTH_MS_DATABASE_URL
+              value: "mysql://root:root@mysql:3306/testdb"
+            # =========================
+            # ENVIRONMENT
+            # =========================
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: config
+                  key: NODE_ENV
