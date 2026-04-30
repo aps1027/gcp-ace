@@ -4,9 +4,9 @@ metadata:
   name: mysql
   namespace: k8s-dev
 spec:
+  clusterIP: None
   selector:
     app: mysql
   ports:
     - port: 3306
       targetPort: 3306
-  type: ClusterIP

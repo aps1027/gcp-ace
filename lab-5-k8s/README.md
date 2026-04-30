@@ -1266,3 +1266,5 @@ MYSQL_SVC --> MYSQL_POD
 
 ADMINER_POD --> MYSQL_SVC
 ```
+
+kubectl port-forward svc/adminer 8080:8080 -n k8s-dev
