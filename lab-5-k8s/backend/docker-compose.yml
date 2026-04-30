@@ -36,9 +36,10 @@ services:
       dockerfile: apps/auth/Dockerfile
     ports:
       - '50051:50051'
-    env_file:
-      - .env
     environment:
+      NODE_ENV: ${NODE_ENV}
+      AUTH_MS_URL: ${AUTH_MS_URL}
+      STAFF_JWT_SECRET: ${STAFF_JWT_SECRET}
       AUTH_MS_DATABASE_URL: mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@mysql:3306/${MYSQL_DATABASE}
     depends_on:
       mysql:
@@ -56,10 +57,11 @@ services:
       dockerfile: apps/api/Dockerfile
     ports:
       - '3000:3000'
-    env_file:
-      - .env
     environment:
+      NODE_ENV: ${NODE_ENV}
+      API_PORT: ${API_PORT}
       AUTH_MS_URL: auth:50051
+      STAFF_FRONTEND_URL: ${STAFF_FRONTEND_URL}
     depends_on:
       mysql:
         condition: service_healthy
