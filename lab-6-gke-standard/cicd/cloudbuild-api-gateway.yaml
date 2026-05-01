@@ -5,7 +5,7 @@ steps:
       - build
       - -t
       - us-central1-docker.pkg.dev/$PROJECT_ID/backend/api-gateway:$COMMIT_SHA
-      - ./backend/apps/api
+      - ./lab-6-gke-standard/backend/apps/api
 
   # Push API Gateway image
   - name: gcr.io/cloud-builders/docker

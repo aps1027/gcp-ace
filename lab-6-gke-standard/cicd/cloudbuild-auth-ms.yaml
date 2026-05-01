@@ -5,7 +5,7 @@ steps:
       - build
       - -t
       - us-central1-docker.pkg.dev/$PROJECT_ID/backend/auth-ms:$COMMIT_SHA
-      - ./backend/apps/auth
+      - ./lab-6-gke-standard/backend/apps/auth
 
   # Push Auth MS image
   - name: gcr.io/cloud-builders/docker
@@ -16,7 +16,7 @@ steps:
 images:
   - us-central1-docker.pkg.dev/$PROJECT_ID/backend/auth-ms:$COMMIT_SHA
 
-timeout: 1200s  # 20 minutes
+timeout: 1200s # 20 minutes
 
 options:
   logging: CLOUD_LOGGING_ONLY
