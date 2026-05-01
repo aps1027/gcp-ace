@@ -4,6 +4,7 @@ metadata:
   name: auth
   namespace: k8s-dev
 spec:
+  clusterIP: None
   selector:
     app: auth
   ports:

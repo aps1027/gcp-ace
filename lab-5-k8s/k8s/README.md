@@ -14,7 +14,7 @@ Components:
 - `databases/mysql/statefulset.yaml` deploys MySQL as a `StatefulSet` with persistent storage.
 - `databases/mysql/service.yaml` exposes MySQL via a headless `ClusterIP` service called `mysql`.
 - `services/auth/deployment.yaml` deploys the `auth` microservice and injects database and environment variables.
-- `services/auth/service.yaml` exposes the `auth` service internally on port `50051`.
+- `services/auth/service.yaml` exposes the `auth` service internally on port `50051` as a headless service for gPRC load balancing.
 - `services/api/deployment.yaml` deploys the `api` microservice and configures it to call `auth`.
 - `services/api/service.yaml` exposes the `api` service internally on port `3000`.
 - `services/api/hpa.yaml` defines an HPA for the `api` deployment.

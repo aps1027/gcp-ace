@@ -25,7 +25,7 @@ export class AppController implements OnModuleInit {
   }
 
   @Get()
-  getHello(): string {
+  getHello() {
     return this.appService.getHello();
   }
 

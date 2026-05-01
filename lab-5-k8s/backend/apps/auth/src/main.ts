@@ -10,7 +10,7 @@ async function bootstrap() {
       transport: Transport.GRPC,
       options: {
         ...AUTH_GRPC_OPTION,
-        url: `dns:///` + process.env.AUTH_MS_URL,
+        url: process.env.AUTH_MS_URL,
       },
     },
   );
