@@ -1,0 +1,47 @@
+resource "google_cloudbuild_trigger" "api_gateway" {
+  name            = "api-gateway-trigger"
+  description     = "Trigger for building and pushing API Gateway image to Artifact Registry"
+  project         = var.project_id
+  location        = var.region
+  service_account = google_service_account.cloudbuild.id
+
+  github {
+    owner = var.github_owner
+    name  = var.github_repo
+    push {
+      branch = var.trigger_branch
+    }
+  }
+
+  included_files = [
+    "lab-6-gke-standard/backend/**",
+    "lab-6-gke-standard/cicd/cloudbuild-api-gateway.yaml"
+  ]
+
+  filename = "lab-6-gke-standard/cicd/cloudbuild-api-gateway.yaml"
+}
+
+resource "google_cloudbuild_trigger" "auth_ms" {
+  name        = "auth-ms-trigger"
+  description = "Trigger for building and pushing Auth MS image to Artifact Registry"
+
+  project         = var.project_id
+  location        = var.region
+  service_account = google_service_account.cloudbuild.id
+
+  github {
+    owner = var.github_owner
+    name  = var.github_repo
+
+    push {
+      branch = var.trigger_branch
+    }
+  }
+
+  included_files = [
+    "lab-6-gke-standard/backend/**",
+    "lab-6-gke-standard/cicd/cloudbuild-auth-ms.yaml"
+  ]
+
+  filename = "lab-6-gke-standard/cicd/cloudbuild-auth-ms.yaml"
+}
