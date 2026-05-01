@@ -7,7 +7,7 @@ steps:
       - ./lab-6-gke-standard/backend/docker/Dockerfile.auth
       - -t
       - $_REGION-docker.pkg.dev/$_PROJECT_ID/backend/auth-ms:$COMMIT_SHA
-      - ./lab-6-gke-standard
+      - ./lab-6-gke-standard/backend
 
   # Push Auth MS image
   - name: gcr.io/cloud-builders/docker
