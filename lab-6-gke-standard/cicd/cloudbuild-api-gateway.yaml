@@ -3,18 +3,20 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args:
       - build
+      - -f
+      - ./lab-6-gke-standard/backend/docker/Dockerfile.api
       - -t
-      - us-central1-docker.pkg.dev/$PROJECT_ID/backend/api-gateway:$COMMIT_SHA
-      - ./lab-6-gke-standard/backend/apps/api
+      - $_REGION-docker.pkg.dev/$_PROJECT_ID/backend/api-gateway:$COMMIT_SHA
+      - .
 
   # Push API Gateway image
   - name: gcr.io/cloud-builders/docker
     args:
       - push
-      - us-central1-docker.pkg.dev/$PROJECT_ID/backend/api-gateway:$COMMIT_SHA
+      - $_REGION-docker.pkg.dev/$_PROJECT_ID/backend/api-gateway:$COMMIT_SHA
 
 images:
-  - us-central1-docker.pkg.dev/$PROJECT_ID/backend/api-gateway:$COMMIT_SHA
+  - $_REGION-docker.pkg.dev/$_PROJECT_ID/backend/api-gateway:$COMMIT_SHA
 
 timeout: 1200s # 20 minutes
 

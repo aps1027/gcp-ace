@@ -33,7 +33,7 @@ services:
   auth:
     build:
       context: .
-      dockerfile: apps/auth/Dockerfile
+      dockerfile: docker/Dockerfile.auth
     ports:
       - '50051:50051'
     environment:
@@ -54,7 +54,7 @@ services:
   api:
     build:
       context: .
-      dockerfile: apps/api/Dockerfile
+      dockerfile: docker/Dockerfile.api
     ports:
       - '3000:3000'
     environment:

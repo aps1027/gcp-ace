@@ -19,6 +19,11 @@ resource "google_cloudbuild_trigger" "api_gateway" {
   ]
 
   filename = "lab-6-gke-standard/cicd/cloudbuild-api-gateway.yaml"
+
+  substitutions = {
+    _PROJECT_ID = var.project_id
+    _REGION     = var.region
+  }
 }
 
 resource "google_cloudbuild_trigger" "auth_ms" {
@@ -44,4 +49,9 @@ resource "google_cloudbuild_trigger" "auth_ms" {
   ]
 
   filename = "lab-6-gke-standard/cicd/cloudbuild-auth-ms.yaml"
+
+  substitutions = {
+    _PROJECT_ID = var.project_id
+    _REGION     = var.region
+  }
 }
