@@ -42,9 +42,10 @@ resource "google_container_node_pool" "pool_a" {
   }
 
   node_config {
-    machine_type = var.machine_type
-    disk_size_gb = var.disk_size_gb
-    disk_type    = "pd-standard"
+    machine_type    = var.machine_type
+    disk_size_gb    = var.disk_size_gb
+    disk_type       = "pd-standard"
+    service_account = google_service_account.gke_node.email
 
     # Workload Identity on each node
     workload_metadata_config {
