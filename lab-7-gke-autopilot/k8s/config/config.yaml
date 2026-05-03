@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config
+  namespace: k8s-dev
+data:
+  MYSQL_HOST: mysql
+  MYSQL_PORT: "3306"
+  MYSQL_DATABASE: testdb
+
+  AUTH_MS_URL: "0.0.0.0:50051"
+  NODE_ENV: "development"

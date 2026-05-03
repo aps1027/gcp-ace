@@ -1,0 +1,24 @@
+steps:
+  # Build Auth MS image
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - build
+      - -f
+      - ./lab-6-gke-standard/backend/docker/Dockerfile.auth
+      - -t
+      - $_REGION-docker.pkg.dev/$_PROJECT_ID/backend/auth-ms:$COMMIT_SHA
+      - ./lab-6-gke-standard/backend
+
+  # Push Auth MS image
+  - name: gcr.io/cloud-builders/docker
+    args:
+      - push
+      - $_REGION-docker.pkg.dev/$_PROJECT_ID/backend/auth-ms:$COMMIT_SHA
+
+images:
+  - $_REGION-docker.pkg.dev/$_PROJECT_ID/backend/auth-ms:$COMMIT_SHA
+
+timeout: 1200s # 20 minutes
+
+options:
+  logging: CLOUD_LOGGING_ONLY

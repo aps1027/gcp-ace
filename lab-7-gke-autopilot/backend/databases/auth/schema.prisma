@@ -1,0 +1,195 @@
+datasource db {
+    provider = "mysql"
+    url      = env("AUTH_MS_DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+    output   = "../../node_modules/@prisma/auth-ms"
+}
+
+enum SystemUserType {
+    CUSTOMER
+    STAFF
+}
+
+enum TokenType {
+    RESET
+    VERIFY
+}
+
+model User {
+    id    Int            @id @default(autoincrement())
+    type  SystemUserType
+    staff Staff?
+
+    @@map("users")
+}
+
+model StaffPosition {
+    id            Int       @id @default(autoincrement())
+    name          String    @db.VarChar(255)
+    description   String?   @db.Text
+    created_at    DateTime  @default(now())
+    updated_at    DateTime  @updatedAt
+    deleted_at    DateTime?
+    created_by_id Int
+    updated_by_id Int
+    deleted_by_id Int?
+    staffs        Staff[]
+
+    @@map("staff_positions")
+}
+
+model StaffDepartment {
+    id            Int       @id @default(autoincrement())
+    name          String    @db.VarChar(255)
+    description   String?   @db.Text
+    created_at    DateTime  @default(now())
+    updated_at    DateTime  @updatedAt
+    deleted_at    DateTime?
+    created_by_id Int
+    updated_by_id Int
+    deleted_by_id Int?
+    staffs        Staff[]
+
+    @@map("staff_departments")
+}
+
+model Staff {
+    id                Int               @id @default(autoincrement())
+    is_root           Boolean           @default(false)
+    user              User              @relation(fields: [user_id], references: [id])
+    user_id           Int               @unique
+    first_name        String            @db.VarChar(255)
+    last_name         String            @db.VarChar(255)
+    email             String            @unique @db.VarChar(255)
+    password          String            @db.VarChar(255)
+    position          StaffPosition     @relation(fields: [position_id], references: [id])
+    position_id       Int
+    department        StaffDepartment   @relation(fields: [department_id], references: [id])
+    department_id     Int
+    profile_path      String?           @db.VarChar(255)
+    cover_photo_path  String?           @db.VarChar(255)
+    bio               String?           @db.Text
+    created_at        DateTime          @default(now())
+    updated_at        DateTime          @updatedAt
+    deleted_at        DateTime?
+    created_by_id     Int
+    updated_by_id     Int
+    deleted_by_id     Int?
+    tokens            StaffToken[]
+    staff_permissions StaffPermission[]
+    staff_groups      StaffGroup[]
+
+    @@map("staffs")
+}
+
+model StaffToken {
+    id         Int       @id @default(autoincrement())
+    staff      Staff     @relation(fields: [staff_id], references: [id])
+    staff_id   Int
+    token      String    @unique
+    type       TokenType
+    expires_at DateTime
+    created_at DateTime  @default(now())
+
+    @@map("staff_tokens")
+}
+
+model PermissionResource {
+    id          Int          @id @default(autoincrement())
+    name        String       @unique @db.VarChar(255)
+    description String?      @db.Text
+    created_at  DateTime     @default(now())
+    updated_at  DateTime     @updatedAt
+    deleted_at  DateTime?
+    permissions Permission[]
+
+    @@map("permission_resources")
+}
+
+model PermissionType {
+    id          Int          @id @default(autoincrement())
+    name        String       @unique @db.VarChar(255)
+    description String?      @db.Text
+    created_at  DateTime     @default(now())
+    updated_at  DateTime     @updatedAt
+    deleted_at  DateTime?
+    permissions Permission[]
+
+    @@map("permission_types")
+}
+
+model Permission {
+    id                Int                @id @default(autoincrement())
+    type              PermissionType     @relation(fields: [type_id], references: [id])
+    type_id           Int
+    resource          PermissionResource @relation(fields: [resource_id], references: [id])
+    resource_id       Int
+    name              String             @db.VarChar(255)
+    description       String?            @db.Text
+    created_at        DateTime           @default(now())
+    updated_at        DateTime           @updatedAt
+    deleted_at        DateTime?
+    staff_permissions StaffPermission[]
+    group_permissions GroupPermission[]
+
+    @@map("permissions")
+}
+
+model StaffPermission {
+    id             Int        @id @default(autoincrement())
+    staff          Staff      @relation(fields: [staff_id], references: [id])
+    staff_id       Int
+    permission     Permission @relation(fields: [permission_id], references: [id])
+    permission_id  Int
+    is_allowed_all Boolean    @default(true)
+    allow_ids      Json?
+    created_at     DateTime   @default(now())
+    created_by_id  Int
+
+    @@map("staff_permissions")
+}
+
+model Group {
+    id                Int               @id @default(autoincrement())
+    name              String            @db.VarChar(255)
+    description       String?           @db.Text
+    created_at        DateTime          @default(now())
+    updated_at        DateTime          @updatedAt
+    deleted_at        DateTime?
+    created_by_id     Int
+    updated_by_id     Int
+    deleted_by_id     Int?
+    group_permissions GroupPermission[]
+    staff_groups      StaffGroup[]
+
+    @@map("groups")
+}
+
+model GroupPermission {
+    id             Int        @id @default(autoincrement())
+    group          Group      @relation(fields: [group_id], references: [id])
+    group_id       Int
+    permission     Permission @relation(fields: [permission_id], references: [id])
+    permission_id  Int
+    is_allowed_all Boolean    @default(true)
+    allow_ids      Json?
+    created_at     DateTime   @default(now())
+    created_by_id  Int
+
+    @@map("group_permissions")
+}
+
+model StaffGroup {
+    id            Int      @id @default(autoincrement())
+    group         Group    @relation(fields: [group_id], references: [id])
+    group_id      Int
+    staff         Staff    @relation(fields: [staff_id], references: [id])
+    staff_id      Int
+    created_at    DateTime @default(now())
+    created_by_id Int
+
+    @@map("staff_groups")
+}
