@@ -199,3 +199,30 @@ Every `git push` to the trigger branch fires Cloud Build which:
 - The `api` Service must be `NodePort` (not `ClusterIP`) for the GCE Ingress to route traffic correctly.
 - The MySQL service is headless (`clusterIP: None`) so the StatefulSet gets a stable DNS identity (`mysql.k8s-dev.svc.cluster.local`).
 - The static IP name (`gke-standard-ingress-ip`) is reserved by Terraform and referenced in the Ingress annotation. Run `terraform output ingress_ip_address` to get the address.
+
+## Teardown
+
+> **Important:** Run `terraform destroy` directly will fail. The GKE Ingress controller creates GCE resources (Network Endpoint Groups, Load Balancer backends) outside of Terraform. These must be deleted first or the VPC deletion will be blocked.
+
+**Step 1 — Delete Kubernetes resources** (triggers GKE to clean up GCE LB resources):
+```bash
+kubectl delete -f k8s/services/api/ingress.yaml
+kubectl delete -f k8s/services/api/
+kubectl delete -f k8s/services/auth/
+kubectl delete -f k8s/databases/mysql/
+kubectl delete -f k8s/tools/adminer/
+kubectl delete -f k8s/config/
+kubectl delete -f k8s/cluster/
+```
+
+**Step 2 — Wait for GCE LB cleanup** (2–3 minutes):
+```bash
+gcloud compute network-endpoint-groups list --project=YOUR_PROJECT_ID
+```
+
+Wait until the list is empty, then proceed.
+
+**Step 3 — Destroy Terraform resources:**
+```bash
+terraform destroy
+```
