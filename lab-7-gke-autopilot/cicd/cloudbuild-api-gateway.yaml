@@ -4,10 +4,10 @@ steps:
     args:
       - build
       - -f
-      - ./lab-6-gke-standard/backend/docker/Dockerfile.api
+      - ./lab-7-gke-autopilot/backend/docker/Dockerfile.api
       - -t
       - $_REGION-docker.pkg.dev/$_PROJECT_ID/backend/api-gateway:$COMMIT_SHA
-      - ./lab-6-gke-standard/backend
+      - ./lab-7-gke-autopilot/backend
 
   # Push API Gateway image
   - name: gcr.io/cloud-builders/docker
