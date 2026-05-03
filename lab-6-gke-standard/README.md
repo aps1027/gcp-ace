@@ -184,6 +184,29 @@ Every `git push` to the trigger branch fires Cloud Build which:
 2. Pushes it to Artifact Registry
 3. Runs `kubectl set image` to roll out the new image on the cluster
 
+## Accessing the API
+
+Once the Ingress is ready, get the public IP:
+
+```bash
+kubectl get ingress api-ingress -n k8s-dev
+```
+
+Look for the `ADDRESS` column, then open in a browser:
+
+```
+http://<ADDRESS>/api
+```
+
+You can also get the IP from Terraform:
+
+```bash
+cd terraform
+terraform output ingress_ip_address
+```
+
+> The GCE load balancer takes **3–5 minutes** to provision after the Ingress is first created. The `ADDRESS` field will be empty until it is ready.
+
 ## Runtime Relationships
 
 - `api` calls `auth` over gRPC using `AUTH_MS_URL=auth:50051`.

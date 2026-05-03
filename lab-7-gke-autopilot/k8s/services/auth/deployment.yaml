@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: auth
-          image: backend-auth:latest
-          imagePullPolicy: Never
+          image: gcr.io/placeholder/auth-ms:placeholder
+          imagePullPolicy: Always
           ports:
             - containerPort: 50051
           command:

@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
         - name: api
-          image: backend-api:latest
-          imagePullPolicy: Never
+          image: gcr.io/placeholder/api-gatway:placeholder
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           resources:

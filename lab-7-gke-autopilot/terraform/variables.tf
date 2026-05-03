@@ -24,3 +24,9 @@ variable "trigger_branch" {
   type        = string
 
 }
+
+variable "cluster_name" {
+  description = "Name of the GKE cluster"
+  type        = string
+  default     = "gke-autopilot"
+}

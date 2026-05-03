@@ -1,5 +1,6 @@
 project_id     = "your-project-id"
 region         = "us-central1"
-github_owner   = 
+cluster_name   = "gke-autopilot"
+github_owner   = "your-github-owner"
 github_repo    = "gcp-ace"
 trigger_branch = "master"

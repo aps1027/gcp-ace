@@ -4,17 +4,11 @@ metadata:
   name: api-ingress
   namespace: k8s-dev
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: "gke-autopilot-ingress-ip"
 spec:
-  ingressClassName: nginx
-  rules:
-    - host: api.local
-      http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: api
-                port:
-                  number: 3000
+  defaultBackend:
+    service:
+      name: api
+      port:
+        number: 3000

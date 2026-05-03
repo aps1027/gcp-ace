@@ -21,8 +21,10 @@ resource "google_cloudbuild_trigger" "api_gateway" {
   filename = "lab-7-gke-autopilot/cicd/cloudbuild-api-gateway.yaml"
 
   substitutions = {
-    _PROJECT_ID = var.project_id
-    _REGION     = var.region
+    _PROJECT_ID   = var.project_id
+    _REGION       = var.region
+    _CLUSTER_NAME = var.cluster_name
+    _CLUSTER_ZONE = var.cluster_zone
   }
 }
 
@@ -51,7 +53,9 @@ resource "google_cloudbuild_trigger" "auth_ms" {
   filename = "lab-7-gke-autopilot/cicd/cloudbuild-auth-ms.yaml"
 
   substitutions = {
-    _PROJECT_ID = var.project_id
-    _REGION     = var.region
+    _PROJECT_ID   = var.project_id
+    _REGION       = var.region
+    _CLUSTER_NAME = var.cluster_name
+    _CLUSTER_ZONE = var.cluster_zone
   }
 }

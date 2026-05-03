@@ -49,6 +49,14 @@ spec:
           args:
             - --default-authentication-plugin=mysql_native_password
 
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+
           volumeMounts:
             - name: mysql-data
               mountPath: /var/lib/mysql
@@ -57,7 +65,8 @@ spec:
     - metadata:
         name: mysql-data
       spec:
+        storageClassName: standard-rwo
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 128Mi
+            storage: 10Gi
