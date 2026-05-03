@@ -243,3 +243,8 @@ Wait until the list is empty, then proceed.
 ```bash
 terraform destroy
 ```
+
+**Step 4 — Switch kubectl back to docker-desktop:**
+```bash
+kubectl config use-context docker-desktop
+```
