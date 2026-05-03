@@ -15,8 +15,8 @@ spec:
     spec:
       containers:
         - name: auth
-          image: backend-auth:latest
-          imagePullPolicy: Never
+          image: REGION-docker.pkg.dev/PROJECT_ID/backend/auth-ms:TAG
+          imagePullPolicy: Always
           ports:
             - containerPort: 50051
           command:

@@ -24,3 +24,15 @@ variable "trigger_branch" {
   type        = string
 
 }
+
+variable "zone" {
+  description = "GCP Zone for the GKE cluster"
+  type        = string
+  default     = "us-central1-a"
+}
+
+variable "cluster_name" {
+  description = "Name of the GKE cluster"
+  type        = string
+  default     = "gke-standard"
+}

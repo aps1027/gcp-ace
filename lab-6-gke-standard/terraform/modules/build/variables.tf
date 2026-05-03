@@ -22,5 +22,14 @@ variable "github_repo" {
 variable "trigger_branch" {
   description = "Branch to trigger Cloud Build on"
   type        = string
+}
 
+variable "cluster_name" {
+  description = "GKE cluster name - passed as _CLUSTER_NAME substitution"
+  type        = string
+}
+
+variable "cluster_zone" {
+  description = "GKE cluster zone - passed as _CLUSTER_ZONE substitution"
+  type        = string
 }

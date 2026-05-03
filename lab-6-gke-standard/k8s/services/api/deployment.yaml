@@ -17,8 +17,8 @@ spec:
     spec:
       containers:
         - name: api
-          image: backend-api:latest
-          imagePullPolicy: Never
+          image: REGION-docker.pkg.dev/PROJECT_ID/backend/api-gatway:TAG
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           resources:

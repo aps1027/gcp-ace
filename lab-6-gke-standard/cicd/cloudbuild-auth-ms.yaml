@@ -15,6 +15,18 @@ steps:
       - push
       - $_REGION-docker.pkg.dev/$_PROJECT_ID/backend/auth-ms:$COMMIT_SHA
 
+  # Deploy Auth MS to GKE cluster
+  - name: gcr.io/cloud-builders/kubectl
+    args:
+      - set
+      - image
+      - deployment/auth
+      - auth=$_REGION-docker.pkg.dev/$_PROJECT_ID/backend/auth-ms:$COMMIT_SHA
+      - --namespace=k8s-dev
+    env:
+      - CLOUDSDK_CONTAINER_CLUSTER=$_CLUSTER_NAME
+      - CLOUDSDK_COMPUTE_ZONE=$_CLUSTER_ZONE
+
 images:
   - $_REGION-docker.pkg.dev/$_PROJECT_ID/backend/auth-ms:$COMMIT_SHA
 
