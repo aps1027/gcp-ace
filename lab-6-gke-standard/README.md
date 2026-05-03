@@ -206,7 +206,6 @@ Every `git push` to the trigger branch fires Cloud Build which:
 
 **Step 1 — Delete Kubernetes resources** (triggers GKE to clean up GCE LB resources):
 ```bash
-kubectl delete -f k8s/services/api/ingress.yaml
 kubectl delete -f k8s/services/api/
 kubectl delete -f k8s/services/auth/
 kubectl delete -f k8s/databases/mysql/
