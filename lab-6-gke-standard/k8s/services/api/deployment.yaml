@@ -29,6 +29,22 @@ spec:
               cpu: "500m"
               memory: "256Mi"
 
+          readinessProbe:
+            httpGet:
+              path: /api
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            failureThreshold: 3
+
+          livenessProbe:
+            httpGet:
+              path: /api
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            failureThreshold: 3
+
           env:
             # =========================
             # ENVIRONMENT

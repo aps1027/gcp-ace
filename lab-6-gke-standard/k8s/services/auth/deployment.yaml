@@ -32,6 +32,21 @@ spec:
               cpu: "500m"
               memory: "256Mi"
 
+          # Prisma migrate runs before the app starts — give it time before probing
+          readinessProbe:
+            tcpSocket:
+              port: 50051
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            failureThreshold: 3
+
+          livenessProbe:
+            tcpSocket:
+              port: 50051
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            failureThreshold: 3
+
           env:
             # =========================
             # DB CONFIG (from config + secret)
