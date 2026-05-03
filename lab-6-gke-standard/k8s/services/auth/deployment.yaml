@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: REGION-docker.pkg.dev/PROJECT_ID/backend/auth-ms:TAG
+          image: gcr.io/placeholder/auth-ms:placeholder
           imagePullPolicy: Always
           ports:
             - containerPort: 50051

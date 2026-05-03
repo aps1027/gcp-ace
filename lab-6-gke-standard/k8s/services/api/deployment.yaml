@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: api
-          image: REGION-docker.pkg.dev/PROJECT_ID/backend/api-gatway:TAG
+          image: gcr.io/placeholder/api-gatway:placeholder
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
